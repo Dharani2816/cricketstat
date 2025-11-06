@@ -1,0 +1,23 @@
+# Git ignore file 
+# === Build and output ===
+/out/
+*.class
+
+# === IDE and system files ===
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# === JARs and libraries ===
+/lib/*.jar
+
+# === Temporary or log files ===
+*.log
+*.tmp
+*.bat
+
+# === Credentials or local config ===
+*.properties
+

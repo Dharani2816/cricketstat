@@ -7,42 +7,29 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class MatchService {
-    private final MatchDAO dao;
+    private final MatchDAO dao = new MatchDAO();
 
-    public MatchService() {
-        this.dao = new MatchDAO();
-    }
-
-    public MatchService(MatchDAO dao) {
-        this.dao = dao;
-    }
-
-    public void addMatch(Match match) {
-        validateMatch(match, false);
+    public void addMatch(Match m) {
         try {
-            dao.addMatch(match);
+            dao.addMatch(m);
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to add match", e);
+            throw new RuntimeException("Failed to add match: " + e.getMessage());
         }
     }
 
-    public void updateMatch(Match match) {
-        if (match.getMatchId() <= 0) {
-            throw new IllegalArgumentException("matchId is required for update");
-        }
-        validateMatch(match, true);
+    public void updateMatch(Match m) {
         try {
-            dao.updateMatch(match);
+            dao.updateMatch(m);
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to update match", e);
+            throw new RuntimeException("Failed to update match: " + e.getMessage());
         }
     }
 
-    public void deleteMatch(int matchId) {
+    public void deleteMatch(int id) {
         try {
-            dao.deleteMatch(matchId);
+            dao.deleteMatch(id);
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to delete match", e);
+            throw new RuntimeException("Failed to delete match: " + e.getMessage());
         }
     }
 
@@ -50,79 +37,33 @@ public class MatchService {
         try {
             return dao.getAllMatches();
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to fetch matches", e);
+            throw new RuntimeException("Failed to get all matches: " + e.getMessage());
         }
     }
 
+    // Aggregations
     public int getTotalMatches() {
-        try {
-            return dao.getTotalMatches();
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get total matches", e);
-        }
+        return getAllMatches().size();
     }
 
     public int getTotalRuns() {
-        try {
-            return dao.getTotalRuns();
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get total runs", e);
-        }
+        return getAllMatches().stream().mapToInt(Match::getRuns).sum();
     }
 
     public int getTotalWickets() {
-        try {
-            return dao.getTotalWickets();
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get total wickets", e);
-        }
+        return getAllMatches().stream().mapToInt(Match::getWickets).sum();
     }
 
     public double getTotalOvers() {
-        try {
-            return dao.getTotalOvers();
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get total overs", e);
-        }
+        return getAllMatches().stream().mapToDouble(Match::getOversBowled).sum();
     }
 
     public int getTotalInnings() {
-        try {
-            return dao.getTotalInnings();
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to get total innings", e);
-        }
+        return getAllMatches().stream().mapToInt(Match::getInnings).sum();
     }
 
     public double getBattingAverage() {
         int innings = getTotalInnings();
-        int runs = getTotalRuns();
-        return innings == 0 ? 0.0 : (double) runs / innings;
-    }
-
-    private void validateMatch(Match m, boolean isUpdate) {
-        if (m.getMatchDate() == null) {
-            throw new IllegalArgumentException("Match date is required");
-        }
-        if (m.getOpponent() == null || m.getOpponent().trim().isEmpty()) {
-            throw new IllegalArgumentException("Opponent is required");
-        }
-        if (m.getRuns() < 0) {
-            throw new IllegalArgumentException("Runs cannot be negative");
-        }
-        if (m.getInnings() < 0) {
-            throw new IllegalArgumentException("Innings cannot be negative");
-        }
-        if (m.getWickets() < 0) {
-            throw new IllegalArgumentException("Wickets cannot be negative");
-        }
-        if (m.getOversBowled() < 0) {
-            throw new IllegalArgumentException("Overs bowled cannot be negative");
-        }
-        // Normalize overs to one decimal place for consistent storage
-        double normalizedOvers = Math.round(m.getOversBowled() * 10.0) / 10.0;
-        m.setOversBowled(normalizedOvers);
+        return innings == 0 ? 0.0 : (double) getTotalRuns() / innings;
     }
 }
-
-
