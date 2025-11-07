@@ -3,22 +3,22 @@ package com.cricketstats.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import javax.naming.spi.DirStateFactory.Result;
 
 public class DBConnection {
-    private static final String URL = "jdbc:mysql://localhost:3306/cricket_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+    private static final String URL =
+  "jdbc:mysql://localhost:3306/cricket_stats";
     private static final String USER = "root";
-    private static final String PASSWORD = "alsaking76#";
+    private static final String PASSWORD = "your password"; // Your real password
 
-    static {
+    public static Connection getConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            System.out.println("✅ MySQL JDBC Driver loaded successfully!");
+            return DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("❌ MySQL JDBC Driver not found. Make sure the JAR is on the classpath.", e);
+            throw new RuntimeException("❌ MySQL JDBC Driver not found.");
+        } catch (SQLException e) {
+            throw new RuntimeException("❌ Failed to connect: " + e.getMessage());
         }
-    }
-
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 }
