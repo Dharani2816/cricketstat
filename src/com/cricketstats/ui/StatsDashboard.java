@@ -30,7 +30,7 @@ public class StatsDashboard extends JFrame {
         } catch (Exception ignored) {}
 
         // ---------- HEADER ----------
-        JLabel header = new JLabel("🏏 Cricket Stats Manager", SwingConstants.CENTER);
+        JLabel header = new JLabel(" Cricket Stats Manager", SwingConstants.CENTER);
         header.setFont(new Font("Segoe UI", Font.BOLD, 26));
         header.setForeground(Color.WHITE);
         header.setOpaque(true);
@@ -59,9 +59,9 @@ public class StatsDashboard extends JFrame {
         }
 
         // ---------- BOTTOM PANEL ----------
-        JButton addMatchBtn = createButton("➕ Add Match", new Color(30, 136, 229));
-        JButton viewHistoryBtn = createButton("📋 View Match History", new Color(67, 160, 71));
-        JButton refreshBtn = createButton("⟳ Refresh", new Color(255, 167, 38));
+        JButton addMatchBtn = createButton(" Add Match", new Color(30, 136, 229));
+        JButton viewHistoryBtn = createButton(" View Match History", new Color(67, 160, 71));
+        JButton refreshBtn = createButton(" Refresh", new Color(255, 167, 38));
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 15));
         bottomPanel.setBackground(new Color(240, 248, 255));
@@ -107,12 +107,12 @@ public class StatsDashboard extends JFrame {
 
     private void refreshStats() {
         try {
-            totalMatchesLabel.setText("🏟️ Total Matches: " + service.getTotalMatches());
-            totalRunsLabel.setText("🏏 Total Runs: " + service.getTotalRuns());
-            totalWicketsLabel.setText("🎯 Total Wickets: " + service.getTotalWickets());
-            totalOversLabel.setText("⏱️ Overs Bowled: " + twoDp.format(service.getTotalOvers()));
-            totalInningsLabel.setText("🧢 Total Innings: " + service.getTotalInnings());
-            battingAverageLabel.setText("📊 Batting Average: " + twoDp.format(service.getBattingAverage()));
+            totalMatchesLabel.setText("Total Matches: " + service.getTotalMatches());
+            totalRunsLabel.setText("Total Runs: " + service.getTotalRuns());
+            totalWicketsLabel.setText("Total Wickets: " + service.getTotalWickets());
+            totalOversLabel.setText("Overs Bowled: " + twoDp.format(service.getTotalOvers()));
+            totalInningsLabel.setText("Total Innings: " + service.getTotalInnings());
+            battingAverageLabel.setText("Batting Average: " + twoDp.format(service.getBattingAverage()));
         } catch (RuntimeException ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
